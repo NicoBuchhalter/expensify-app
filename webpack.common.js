@@ -7,9 +7,6 @@ module.exports = {
   entry: {
     app: './src/app.js'
   },
-  optimization: {
-    minimizer: [new TerserJSPlugin({}), new OptimizeCSSAssetsPlugin({})]
-  },
   plugins: [
     new MiniCssExtractPlugin({
       filename: 'styles.css'
