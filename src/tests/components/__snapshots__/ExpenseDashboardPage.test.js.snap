@@ -4,5 +4,6 @@ exports[`Should render ExpenseDashboardPage correctly 1`] = `
 <div>
   <ConnectFunction />
   <ConnectFunction />
+  <ConnectFunction />
 </div>
 `;
