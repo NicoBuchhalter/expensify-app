@@ -4,15 +4,11 @@ exports[`Should show correct message when multiple expenses 1`] = `
 <div>
   <h1>
     Viewing 
-    <b>
-      3
-    </b>
-     expense
-    s
+    3
+     
+    expenses
      totalling 
-    <b>
-      $25,500.00
-    </b>
+    $25,500.00
   </h1>
 </div>
 `;
@@ -21,14 +17,11 @@ exports[`Should show correct message when only one expense 1`] = `
 <div>
   <h1>
     Viewing 
-    <b>
-      1
-    </b>
-     expense
+    1
+     
+    expense
      totalling 
-    <b>
-      $150.00
-    </b>
+    $150.00
   </h1>
 </div>
 `;
