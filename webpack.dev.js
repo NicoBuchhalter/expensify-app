@@ -1,13 +1,19 @@
-const path = require('path');
-const merge = require('webpack-merge');
-const common = require('./webpack.common.js');
+const path = require("path");
+const merge = require("webpack-merge");
+const common = require("./webpack.common.js");
+const Dotenv = require('dotenv-webpack');
 
 module.exports = merge(common, {
-  mode: 'development',
-  devtool: 'inline-source-map',
+  mode: "development",
+  devtool: "inline-source-map",
+  plugins: [
+    new Dotenv({
+      path: '.env.development'
+    })
+  ],
   devServer: {
-    contentBase: path.join(__dirname, 'public'),
+    contentBase: path.join(__dirname, "public"),
     historyApiFallback: true,
-    publicPath: '/dist/'
+    publicPath: "/dist/"
   }
 });
