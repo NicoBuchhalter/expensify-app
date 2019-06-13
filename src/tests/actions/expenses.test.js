@@ -1,6 +1,6 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import { startAddExpense, addExpense, removeExpense, editExpense } from '../../actions/expenses';
+import { startAddExpense, addExpense, removeExpense, editExpense, setExpenses, startSetExpenses } from '../../actions/expenses';
 import expenses from '../fixtures/expenses';
 import firestore from '../../firebase/firebase';
 
@@ -71,8 +71,42 @@ test('Should add expense to firestore and store with default values', (done) => 
     done(); 
   })
 });
-// test('Should setup add expense action object with default values', () => {
-//   const action = addExpense();
-//   const defaultValues= { description: '', note: '', amount:0, createdAt: 0 };
-//   expect(action).toEqual({ type: 'ADD_EXPENSE', expense: { ...defaultValues, id: expect.any(String)}});  
-// });
+
+test('Should setup set expense action object with provided values', () => {
+  const action = setExpenses(expenses);
+
+  expect(action).toEqual({ 
+    type: 'SET_EXPENSES', 
+    expenses
+  });
+});
+
+describe('Async actions', () => {
+  beforeEach((done) => {
+    firestore.collection('expenses').get().then(querySnapshot => {
+      const deletePromises = [];
+      querySnapshot.forEach(docRef => {
+        deletePromises.push(docRef.ref.delete());
+      });
+      Promise.all(deletePromises).then(() => {
+        const promises = [];
+        expenses.forEach(({ id, description, amount, createdAt, note }) => {
+          promises.push(firestore.collection('expenses').doc(id).set({ description, amount, createdAt, note }));
+        });
+        Promise.all(promises).then(() => done());
+      });
+    });
+  });
+  
+  test('Should fetch expenses from firebase', (done) => {
+    const store = createMockStore({});
+    store.dispatch(startSetExpenses()).then(() => {
+      const actions = store.getActions();
+      expect(actions[0]).toEqual({
+        type: 'SET_EXPENSES',
+        expenses
+      });
+      done()
+    })
+  });
+})

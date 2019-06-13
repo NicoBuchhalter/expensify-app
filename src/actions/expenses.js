@@ -37,3 +37,21 @@ export const editExpense = (id, updates) => ({
   id,
   updates
 });
+
+export const setExpenses = (expenses) => ({
+  type: 'SET_EXPENSES',
+  expenses
+});
+
+
+export const startSetExpenses = () => {
+  return (dispatch) => {
+    return firestoreExpenses.get().then(querySnapshot => {
+      const expenses = querySnapshot.docs.map(docRef => ({
+        id: docRef.id,
+        ...docRef.data()
+      }));
+      dispatch(setExpenses(expenses));
+    });    
+  }
+};
