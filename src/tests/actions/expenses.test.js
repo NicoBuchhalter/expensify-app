@@ -7,7 +7,8 @@ import {
   editExpense,
   setExpenses,
   startSetExpenses,
-  startRemoveExpense
+  startRemoveExpense,
+  startEditExpense
 } from "../../actions/expenses";
 import expenses from "../fixtures/expenses";
 import firestore from "../../firebase/firebase";
@@ -105,27 +106,20 @@ test("Should setup set expense action object with provided values", () => {
 
 describe("Async actions", () => {
   beforeEach(done => {
-    firestore
-      .collection("expenses")
-      .get()
-      .then(querySnapshot => {
-        const deletePromises = [];
-        querySnapshot.forEach(docRef => {
-          deletePromises.push(docRef.ref.delete());
-        });
-        Promise.all(deletePromises).then(() => {
-          const promises = [];
-          expenses.forEach(({ id, description, amount, createdAt, note }) => {
-            promises.push(
-              firestore
-                .collection("expenses")
-                .doc(id)
-                .set({ description, amount, createdAt, note })
-            );
-          });
-          Promise.all(promises).then(() => done());
-        });
+    const expensesCollection = firestore.collection('expenses');
+    expensesCollection.get().then(querySnapshot => {
+      let batch = firestore.batch();
+      querySnapshot.forEach(doc => {
+        batch = batch.delete(doc.ref);
       });
+      batch.commit().then(() => {
+        let otherBatch = firestore.batch();
+        expenses.forEach(({ id, description, amount, createdAt, note }) => {
+          otherBatch = otherBatch.set(expensesCollection.doc(id), { description, amount, createdAt, note });
+        });
+        otherBatch.commit().then(() => done());
+      });
+    });
   });
 
   test("Should fetch expenses from firebase", done => {
@@ -156,8 +150,32 @@ describe("Async actions", () => {
           .doc(id)
           .get();
       })
-      .then(docRef => {
-        expect(docRef.exists).toBeFalsy();
+      .then(snapshot => {
+        expect(snapshot.exists).toBeFalsy();
+        done();
+      });
+  });
+
+  test("Should update expense from firestore and store", done => {
+    const store = createMockStore({});
+    const id = expenses[1].id;
+    const updates = { note: "New note value" };
+    store
+      .dispatch(startEditExpense(id, updates))
+      .then(() => {
+        const actions = store.getActions();
+        expect(actions[0]).toEqual({
+          type: "EDIT_EXPENSE",
+          id,
+          updates
+        });
+        return firestore
+          .collection("expenses")
+          .doc(id)
+          .get()
+      })
+      .then((snapshot) => {
+        expect(snapshot.data().note).toBe("New note value");
         done();
       });
   });
