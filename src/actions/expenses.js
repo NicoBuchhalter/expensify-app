@@ -1,7 +1,9 @@
 import uuid from 'uuid';
 import firestore from '../firebase/firebase';
 
-const firestoreExpenses = firestore.collection('expenses')
+const firestoreUserExpenses = (uid) => {
+  return firestore.collection('users').doc(uid).collection('expenses');
+}
 
 export const addExpense = (expense) => ({
   type: 'ADD_EXPENSE',
@@ -9,7 +11,8 @@ export const addExpense = (expense) => ({
 }); 
 
 export const startAddExpense = (expensesData = {}) => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const uid = getState().auth.uid;
     const {
       description = '', 
       note = '', 
@@ -17,7 +20,7 @@ export const startAddExpense = (expensesData = {}) => {
       createdAt = 0       
     } =  expensesData;
     const expense = { description, note, amount, createdAt };
-    return firestoreExpenses.add(expense).then((docRef) => {
+    return firestoreUserExpenses(uid).add(expense).then((docRef) => {
       dispatch(addExpense({
         id: docRef.id, 
         ...expense
@@ -33,8 +36,9 @@ export const removeExpense = ({ id } = {}) => ({
 });
 
 export const startRemoveExpense = ({ id } = {}) => {
-  return (dispatch) => {
-    return firestoreExpenses.doc(id).delete().then(() => {
+  return (dispatch, getState) => {
+    const uid = getState().auth.uid;
+    return firestoreUserExpenses(uid).doc(id).delete().then(() => {
       dispatch(removeExpense({ id }));
     });    
   }
@@ -47,8 +51,9 @@ export const editExpense = (id, updates) => ({
 });
 
 export const startEditExpense = (id, updates) => {
-  return (dispatch) => {
-    return firestoreExpenses.doc(id).update(updates).then(() => {
+  return (dispatch, getState) => {
+    const uid = getState().auth.uid;
+    return firestoreUserExpenses(uid).doc(id).update(updates).then(() => {
       dispatch(editExpense(id, updates));
     });    
   }
@@ -61,8 +66,9 @@ export const setExpenses = (expenses) => ({
 
 
 export const startSetExpenses = () => {
-  return (dispatch) => {
-    return firestoreExpenses.get().then(querySnapshot => {
+  return (dispatch, getState) => {
+    const uid = getState().auth.uid;
+    return firestoreUserExpenses(uid).get().then(querySnapshot => {
       const expenses = querySnapshot.docs.map(docRef => ({
         id: docRef.id,
         ...docRef.data()

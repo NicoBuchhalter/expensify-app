@@ -13,6 +13,8 @@ import {
 import expenses from "../fixtures/expenses";
 import firestore from "../../firebase/firebase";
 
+const uid = 'Test uid'
+const defaultAuthState = { auth: { uid }};
 const createMockStore = configureMockStore([thunk]);
 
 test("Should setup remove expense action object", () => {
@@ -41,7 +43,7 @@ test("Should setup add expense action object with provided values", () => {
 });
 
 test("Should add expense to firestore and store", done => {
-  const store = createMockStore({});
+  const store = createMockStore(defaultAuthState);
   const expenseData = {
     description: "Almuerzo",
     amount: 15500,
@@ -60,6 +62,8 @@ test("Should add expense to firestore and store", done => {
         }
       });
       return firestore
+        .collection('users')
+        .doc(uid)
         .collection("expenses")
         .doc(actions[0].expense.id)
         .get();
@@ -71,7 +75,7 @@ test("Should add expense to firestore and store", done => {
 });
 
 test("Should add expense to firestore and store with default values", done => {
-  const store = createMockStore({});
+  const store = createMockStore(defaultAuthState);
   const defaultValues = { description: "", note: "", amount: 0, createdAt: 0 };
   store
     .dispatch(startAddExpense())
@@ -85,6 +89,8 @@ test("Should add expense to firestore and store with default values", done => {
         }
       });
       return firestore
+        .collection('users')
+        .doc(uid)
         .collection("expenses")
         .doc(actions[0].expense.id)
         .get();
@@ -106,7 +112,7 @@ test("Should setup set expense action object with provided values", () => {
 
 describe("Async actions", () => {
   beforeEach(done => {
-    const expensesCollection = firestore.collection('expenses');
+    const expensesCollection = firestore.collection('users').doc(uid).collection('expenses');
     expensesCollection.get().then(querySnapshot => {
       let batch = firestore.batch();
       querySnapshot.forEach(doc => {
@@ -123,7 +129,7 @@ describe("Async actions", () => {
   });
 
   test("Should fetch expenses from firebase", done => {
-    const store = createMockStore({});
+    const store = createMockStore(defaultAuthState);
     store.dispatch(startSetExpenses()).then(() => {
       const actions = store.getActions();
       expect(actions[0]).toEqual({
@@ -135,7 +141,7 @@ describe("Async actions", () => {
   });
 
   test("Should remove expense from firestore and store", done => {
-    const store = createMockStore({});
+    const store = createMockStore(defaultAuthState);
     const id = expenses[1].id;
     store
       .dispatch(startRemoveExpense({ id }))
@@ -146,6 +152,8 @@ describe("Async actions", () => {
           id
         });
         return firestore
+          .collection('users')
+          .doc(uid)
           .collection("expenses")
           .doc(id)
           .get();
@@ -157,7 +165,7 @@ describe("Async actions", () => {
   });
 
   test("Should update expense from firestore and store", done => {
-    const store = createMockStore({});
+    const store = createMockStore(defaultAuthState);
     const id = expenses[1].id;
     const updates = { note: "New note value" };
     store
@@ -170,6 +178,8 @@ describe("Async actions", () => {
           updates
         });
         return firestore
+          .collection('users')
+          .doc(uid)
           .collection("expenses")
           .doc(id)
           .get()
