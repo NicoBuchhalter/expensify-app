@@ -19,23 +19,6 @@ const config = {
 firebase.initializeApp(config);
 
 const firestore = firebase.firestore();
+const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
 
-// const onNext = (snapshot) => {
-//   const expenses = [];
-//   snapshot.forEach((childSnapshot => {
-//     expenses.push({
-//       ...childSnapshot.data(),
-//       id: childSnapshot.id    
-//     })
-//   }))
-//   console.log(expenses);
-// };
-
-// const onError = (err) => {
-//   console.log(err.message);
-// }
-
-// firestore.collection('expenses').onSnapshot(onNext, onError);
-
-
-export default firestore;
+export { googleAuthProvider, firebase, firestore as default };
