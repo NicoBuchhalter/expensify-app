@@ -7,12 +7,14 @@ exports[`Should render ExpenseForm correctly 1`] = `
   >
     <input
       autoFocus={true}
+      className="text-input"
       onChange={[Function]}
       placeholder="Description"
       type="text"
       value=""
     />
     <input
+      className="text-input"
       onChange={[Function]}
       placeholder="Amount"
       type="text"
@@ -108,8 +110,9 @@ exports[`Should render ExpenseForm correctly 1`] = `
       withPortal={false}
     />
     <textarea
+      className="textarea"
       onChange={[Function]}
-      placeholder="Add a noote (opotional)"
+      placeholder="Add a note (opotional)"
       value=""
     />
     <button>
@@ -126,12 +129,14 @@ exports[`Should render ExpenseForm with given data 1`] = `
   >
     <input
       autoFocus={true}
+      className="text-input"
       onChange={[Function]}
       placeholder="Description"
       type="text"
       value="Gum"
     />
     <input
+      className="text-input"
       onChange={[Function]}
       placeholder="Amount"
       type="text"
@@ -227,8 +232,9 @@ exports[`Should render ExpenseForm with given data 1`] = `
       withPortal={false}
     />
     <textarea
+      className="textarea"
       onChange={[Function]}
-      placeholder="Add a noote (opotional)"
+      placeholder="Add a note (opotional)"
       value=""
     />
     <button>
@@ -245,12 +251,14 @@ exports[`Should render error for invalid form submission 1`] = `
   >
     <input
       autoFocus={true}
+      className="text-input"
       onChange={[Function]}
       placeholder="Description"
       type="text"
       value=""
     />
     <input
+      className="text-input"
       onChange={[Function]}
       placeholder="Amount"
       type="text"
@@ -346,8 +354,9 @@ exports[`Should render error for invalid form submission 1`] = `
       withPortal={false}
     />
     <textarea
+      className="textarea"
       onChange={[Function]}
-      placeholder="Add a noote (opotional)"
+      placeholder="Add a note (opotional)"
       value=""
     />
     <button>
@@ -367,12 +376,14 @@ exports[`Should render error for invalid form submission 2`] = `
   >
     <input
       autoFocus={true}
+      className="text-input"
       onChange={[Function]}
       placeholder="Description"
       type="text"
       value=""
     />
     <input
+      className="text-input"
       onChange={[Function]}
       placeholder="Amount"
       type="text"
@@ -468,8 +479,9 @@ exports[`Should render error for invalid form submission 2`] = `
       withPortal={false}
     />
     <textarea
+      className="textarea"
       onChange={[Function]}
-      placeholder="Add a noote (opotional)"
+      placeholder="Add a note (opotional)"
       value=""
     />
     <button>
