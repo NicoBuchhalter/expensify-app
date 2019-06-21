@@ -7,6 +7,9 @@ import { startSetExpenses } from './actions/expenses';
 import { firebase } from './firebase/firebase';
 import { login, logout } from './actions/auth';
 import LoadingPage from './components/LoadingPage';
+import Modal from 'react-modal';
+
+Modal.setAppElement('#app');
 
 import './styles/styles.scss';
 import 'normalize.css/normalize.css';

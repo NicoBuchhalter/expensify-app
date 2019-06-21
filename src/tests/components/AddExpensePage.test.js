@@ -5,7 +5,7 @@ import expenses from '../fixtures/expenses';
 
 let startAddExpense, history, wrapper;
 beforeEach(() => {
-  startAddExpense = jest.fn();
+  startAddExpense = jest.fn().mockImplementation(() => Promise.resolve('Added!'));
   history = { push: jest.fn() };
   wrapper = shallow(<AddExpensePage startAddExpense={startAddExpense} history={history} />);
 });
@@ -14,8 +14,11 @@ test('Should render AddExpensePage correctly', () => {
   expect(wrapper).toMatchSnapshot();
 });
 
-test('Should handle onSubmit', () => {
+test('Should handle onSubmit', (done) => {
   wrapper.find('ExpenseForm').prop('onSubmit')(expenses[1]);
-  expect(history.push).toHaveBeenLastCalledWith('/');
   expect(startAddExpense).toHaveBeenLastCalledWith(expenses[1]);
+  startAddExpense().then(() => {
+    expect(history.push).toHaveBeenLastCalledWith('/');
+    done();
+  })
 });

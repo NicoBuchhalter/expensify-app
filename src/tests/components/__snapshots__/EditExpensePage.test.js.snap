@@ -2,41 +2,49 @@
 
 exports[`Should render EditExpensePage correctly 1`] = `
 <div>
-  <div
-    className="page-header"
-  >
+  <div>
+    <div
+      className="page-header"
+    >
+      <div
+        className="content-container"
+      >
+        <h1
+          className="page-header__title"
+        >
+          Edit Expense
+        </h1>
+      </div>
+    </div>
     <div
       className="content-container"
     >
-      <h1
-        className="page-header__title"
-      >
-        Edit Expense
-      </h1>
-    </div>
-  </div>
-  <div
-    className="content-container"
-  >
-    <ExpenseForm
-      expense={
-        Object {
-          "amount": 1090000,
-          "createdAt": -345600000,
-          "description": "Rent",
-          "id": "2",
-          "note": "",
+      <ExpenseForm
+        expense={
+          Object {
+            "amount": 1090000,
+            "createdAt": -345600000,
+            "description": "Rent",
+            "id": "2",
+            "note": "",
+          }
         }
-      }
-      onSubmit={[Function]}
-      submitText="Save Expense"
+        onSubmit={[Function]}
+        submitText="Save Expense"
+      />
+      <button
+        className="button--secondary"
+        onClick={[Function]}
+      >
+        Remove Expense
+      </button>
+    </div>
+    <RemoveExpenseModal
+      expenseDescription="Rent"
+      handleCloseModal={[Function]}
+      handleRemoveExpense={[Function]}
+      isModalOpen={false}
     />
-    <button
-      className="button--secondary"
-      onClick={[Function]}
-    >
-      Remove Expense
-    </button>
   </div>
 </div>
 `;

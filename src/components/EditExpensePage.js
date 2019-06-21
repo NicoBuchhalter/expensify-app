@@ -1,35 +1,68 @@
 import React from 'react';
-import ExpenseForm from './ExpenseForm';
 import {connect} from 'react-redux';
+import RemoveExpenseModal from './RemoveExpenseModal';
+import ExpenseForm from './ExpenseForm';
+import LoadingPage from './LoadingPage';
 import { startEditExpense, startRemoveExpense } from '../actions/expenses';
 
 export class EditExpensePage extends React.Component {
+
+  state = {
+    isModalOpen: false,
+    loading: false
+  }
+
   onSubmit = (expense) => {
-    this.props.startEditExpense(this.props.expense.id, expense);
-    this.props.history.push('/');
+    this.setState({ loading: true });
+    this.props.startEditExpense(this.props.expense.id, expense).then(() => {
+      this.props.history.push('/');
+    })
   };
 
   onRemove = () => {
-    this.props.startRemoveExpense(this.props.expense.id);
-    this.props.history.push('/');
+    this.setState({ isModalOpen: false, loading: true });
+    this.props.startRemoveExpense(this.props.expense.id).then(() => {
+      this.props.history.push('/');
+    })
   };
+
+  handleOpenModal = () => {
+    this.setState({ isModalOpen: true });
+  }
+
+  closeModal = () => {
+    this.setState({ isModalOpen: false })
+  }
 
   render() {
     return (
       <div>
-        <div className='page-header'>
-          <div className='content-container'>
-            <h1 className='page-header__title'>Edit Expense</h1>
+        {!this.state.loading ? (
+          <div>
+            <div className='page-header'>
+              <div className='content-container'>
+                <h1 className='page-header__title'>Edit Expense</h1>
+              </div>
+            </div>
+            <div className='content-container'>
+              <ExpenseForm
+                expense={this.props.expense}
+                onSubmit={this.onSubmit}
+                submitText='Save Expense'
+              />
+              <button className='button--secondary' onClick={this.handleOpenModal}>Remove Expense</button>
+            </div>
+            <RemoveExpenseModal 
+              isModalOpen={this.state.isModalOpen} 
+              expenseDescription={this.props.expense.description}
+              handleRemoveExpense={this.onRemove}
+              handleCloseModal={this.closeModal}
+            />
           </div>
-        </div>
-        <div className='content-container'>
-          <ExpenseForm
-            expense={this.props.expense}
-            onSubmit={this.onSubmit}
-            submitText='Save Expense'
-          />
-          <button className='button--secondary' onClick={this.onRemove}>Remove Expense</button>
-        </div>
+        ) :
+        (
+          <LoadingPage/>
+        )}
       </div>
     );
   };
