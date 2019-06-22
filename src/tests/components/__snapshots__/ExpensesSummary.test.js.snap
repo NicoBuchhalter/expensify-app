@@ -13,6 +13,8 @@ exports[`Should show correct message when multiple expenses 1`] = `
       Viewing 
       <span>
         3
+         of 
+        5
       </span>
        
       expenses
@@ -47,6 +49,8 @@ exports[`Should show correct message when only one expense 1`] = `
     >
       Viewing 
       <span>
+        1
+         of 
         1
       </span>
        
