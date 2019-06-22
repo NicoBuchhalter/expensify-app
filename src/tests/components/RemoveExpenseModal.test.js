@@ -27,3 +27,8 @@ test('Should handle remove', () => {
   wrapper.find('.button--secondary').simulate('click');
   expect(handleRemoveExpense).toHaveBeenCalled();
 });
+
+test('Should handle cancel', () => {
+  wrapper.find('button').last().simulate('click');
+  expect(handleCloseModal).toHaveBeenCalled();
+});
